@@ -1,6 +1,7 @@
 package com.lulu.luojcodesandbox.utils;
 
 import com.lulu.luojcodesandbox.model.ExecuteMessage;
+import org.springframework.util.StopWatch;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -24,6 +25,8 @@ public class ProcessUtils {
         ExecuteMessage executeMessage = new ExecuteMessage();
 
         try {
+            StopWatch stopWatch = new StopWatch();
+            stopWatch.start();
             int exitValue = runProcess.waitFor();
             executeMessage.setExitValue(exitValue);
             if (exitValue == 0) {
@@ -57,6 +60,8 @@ public class ProcessUtils {
                 }
                 executeMessage.setErrorMessage(errorCompileOutputStringBuilder.toString());
             }
+            stopWatch.stop();
+            executeMessage.setTime(stopWatch.getTotalTimeMillis());
         } catch (Exception e) {
             e.printStackTrace();
         }
