@@ -17,6 +17,7 @@ import cn.hutool.core.lang.UUID;
 import com.lulu.luojcodesandbox.model.ExecuteCodeRequest;
 import com.lulu.luojcodesandbox.model.ExecuteCodeResponse;
 import com.lulu.luojcodesandbox.model.ExecuteMessage;
+import com.lulu.luojcodesandbox.seurity.DefaultSecurityManager;
 import com.lulu.luojcodesandbox.utils.ProcessUtils;
 
 
@@ -59,6 +60,7 @@ public class JavaNativeCodeSandbox implements CodeSandbox {
 
     @Override
     public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {
+        System.setSecurityManager(new DefaultSecurityManager());
 
         List<String> inputList = executeCodeRequest.getInputList();
         String code = executeCodeRequest.getCode();
@@ -99,6 +101,7 @@ public class JavaNativeCodeSandbox implements CodeSandbox {
 
         for (String inputArgs : inputList) {
             String runCmd = String.format("java -Xmx256m -Dfile.encoding=UTF-8 -cp %s Main %s", userCodeParentPath, inputArgs);
+//            String runCmd = String.format("java -Dfile.encoding=UTF-8 -cp %s;%s -Djava.security.manager=MySecurityManager Main", userCodeParentPath, inputArgs);
             try {
                 Process runProcess = Runtime.getRuntime().exec(runCmd);
                 // 超时控制
