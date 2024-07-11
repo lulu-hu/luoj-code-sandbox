@@ -1,10 +1,13 @@
 package com.lulu.luojcodesandbox.utils;
 
 import com.lulu.luojcodesandbox.model.ExecuteMessage;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.StopWatch;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author lulu
@@ -33,32 +36,36 @@ public class ProcessUtils {
                 System.out.println(opName +"成功");
                 // 分批获取进程的正常输出
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(runProcess.getInputStream()));
-                StringBuilder compileOutputStringBuilder = new StringBuilder();
+                List<String> ouputStrList = new ArrayList<>();
                 // 逐行读取编译信息
                 String compileOutputLine;
                 while ((compileOutputLine = bufferedReader.readLine()) != null) {
-                    compileOutputStringBuilder.append(compileOutputLine);
+                    ouputStrList.add(compileOutputLine);
                 }
-                executeMessage.setMessage(compileOutputStringBuilder.toString());
+                executeMessage.setMessage(StringUtils.join(ouputStrList, "\n"));
             } else {
                 System.out.println( opName +"失败,错误码：" + exitValue);
                 // 分批获取进程的正常输出
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(runProcess.getInputStream()));
-                StringBuilder compileOutputStringBuilder = new StringBuilder();
+                List<String> ouputStrList = new ArrayList<>();
                 // 逐行读取编译信息
                 String compileOutputLine;
                 while ((compileOutputLine = bufferedReader.readLine()) != null) {
-                    compileOutputStringBuilder.append(compileOutputLine);
+                    ouputStrList.add(compileOutputLine);
                 }
+                executeMessage.setMessage(StringUtils.join(ouputStrList, "\n"));
+
                 // 分批获取进程的错误输出
                 BufferedReader errorBufferedReader = new BufferedReader(new InputStreamReader(runProcess.getErrorStream()));
-                StringBuilder errorCompileOutputStringBuilder = new StringBuilder();
+                // 逐行读取编译信息
+
+                List<String> errorOuputStrList = new ArrayList<>();
                 // 逐行读取编译信息
                 String errorCompileOutputLine;
                 while ((errorCompileOutputLine = errorBufferedReader.readLine()) != null) {
-                    errorCompileOutputStringBuilder.append(errorCompileOutputLine);
+                    errorOuputStrList.add(errorCompileOutputLine);
                 }
-                executeMessage.setErrorMessage(errorCompileOutputStringBuilder.toString());
+                executeMessage.setMessage(StringUtils.join(errorOuputStrList, "\n"));
             }
             stopWatch.stop();
             executeMessage.setTime(stopWatch.getTotalTimeMillis());

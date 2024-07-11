@@ -53,28 +53,28 @@ public class DockerDemo {
         // 启动容器
         dockerClient.startContainerCmd(containerId).exec();
 
-        // 查看日志
-        LogContainerResultCallback logContainerResultCallback = new LogContainerResultCallback() {
-            @Override
-            public void onNext(Frame item) {
-                System.out.println(item.getStreamType());
-                System.out.println("日志：" + new String(item.getPayload()));
-                super.onNext(item);
-            }
-        };
-
-        // 阻塞等待日志输出
-        dockerClient.logContainerCmd(containerId)
-                .withStdErr(true)
-                .withStdOut(true)
-                .exec(logContainerResultCallback)
-                .awaitCompletion();
-
-        // 删除容器
-        dockerClient.removeContainerCmd("0e4c774b1207")
-                .withForce(true)
-                .exec();
-        System.out.println("删除成功");
+//        // 查看日志
+//        LogContainerResultCallback logContainerResultCallback = new LogContainerResultCallback() {
+//            @Override
+//            public void onNext(Frame item) {
+//                System.out.println(item.getStreamType());
+//                System.out.println("日志：" + new String(item.getPayload()));
+//                super.onNext(item);
+//            }
+//        };
+//
+//        // 阻塞等待日志输出
+//        dockerClient.logContainerCmd(containerId)
+//                .withStdErr(true)
+//                .withStdOut(true)
+//                .exec(logContainerResultCallback)
+//                .awaitCompletion();
+//
+//        // 删除容器
+//        dockerClient.removeContainerCmd("0e4c774b1207")
+//                .withForce(true)
+//                .exec();
+//        System.out.println("删除成功");
 
         // 删除镜像
 //        dockerClient.removeImageCmd(image)
